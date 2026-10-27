@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Festas | Planeje e Orce seu Evento</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+        }
+
+        .range-value {
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin-top: 5px;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .radio-grid, .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .radio-card, .checkbox-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+        }
+
+        .radio-card:hover, .checkbox-card:hover {
+            border-color: var(--primary);
+            background: #f1f5f9;
+        }
+
+        .radio-card input, .checkbox-card input {
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-calculate {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-calculate:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Resultados */
+        #result-section {
+            display: none;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .total-box h3 {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .total-box .price-range {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .breakdown-table th, .breakdown-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .tips-box {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 16px;
+            color: #065f46;
+            margin-bottom: 20px;
+        }
+
+        .tips-box h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-whatsapp {
+            display: block;
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #20ba5a;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Calculadora de Festas</h1>
+        <p>Planeje seu evento, descubra estimativas de custos e ajuste sua festa sob medida.</p>
+    </header>
+
+    <!-- FORMULÁRIO -->
+    <div class="card" id="form-card">
+        <!-- 1. Tipo de Festa -->
+        <div class="form-group">
+            <label>1. Qual tipo de evento você vai realizar?</label>
+            <select id="tipoFesta">
+                <option value="ChaDeBebê">Chá de Bebê</option>
+                <option value="ChaRevelacao">Chá Revelação</option>
+                <option value="ChaDeCasaNova">Chá de Casa Nova</option>
+                <option value="15Anos">15 Anos</option>
+                <option value="FestaAdultaDiurna">Festa Adulta Diurna</option>
+                <option value="FestaAdultaNoturna">Festa Adulta Noturna</option>
+                <option value="FestaInfantil">Festa Infantil</option>
+                <option value="Casamento">Casamento</option>
+                <option value="ConfraternizacaoEmpresarial">Confraternização Empresarial</option>
+                <option value="HappyHour">Happy Hour</option>
+            </select>
+        </div>
+
+        <!-- 2. Número de Convidados -->
+        <div class="form-group">
+            <label>2. Quantos convidados esperados?</label>
+            <input type="range" id="numConvidados" min="10" max="100" step="5" value="50" oninput="updateGuestCount(this.value)">
+            <span class="range-value" id="guestCountDisplay">50 pessoas</span>
+        </div>
+
+        <!-- 3. Padrão da Festa -->
+        <div class="form-group">
+            <label>3. Qual o padrão desejado para o evento?</label>
+            <div class="radio-grid">
+                <label class="radio-card">
+                    <input type="radio" name="padraoFesta" value="Economica">
+                    <div>
+                        <strong>Econômica</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Simples e enxuta</p>
+                    </div>
+                </label>
+                <label class="radio-card">
+                    <input type="radio" name="padraoFesta" value="Intermediaria" checked>
+                    <div>
+                        <strong>Intermediária</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Equilibrada e completa</p>
+                    </div>
+                </label>
+                <label class="radio-card">
+                    <input type="radio" name="padraoFesta" value="Completa">
+                    <div>
+                        <strong>Completa / Luxo</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Alto padrão de serviços</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- 4. Itens Adicionais e Serviços -->
+        <div class="form-group">
+            <label>4. Selecione os itens e serviços desejados:</label>
+            <div class="checkbox-grid">
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Assador" checked> Assador de Churrasco</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Garcons" checked> Garçons</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Fotografia"> Fotografia</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Filmagem"> Filmagem</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="DecoraPersonalizada"> Decoração Personalizada</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="PegueMonte"> Decoração Pegue e Monte</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Brinquedos"> Brinquedos Infantis</label>
+                <label class="checkbox-card"><input type="checkbox" name="servicos" value="Sinuca"> Mesa de Sinuca</label>
+            </div>
+        </div>
+
+        <button class="btn-calculate" onclick="calcularFesta()">Calcular Minha Festa</button>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="card" id="result-section">
+        <div class="total-box">
+            <h3>Estimativa Total do Evento</h3>
+            <div class="price-range" id="resTotal">R$ 0,00</div>
+            <p id="resSubdetalhes" style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;"></p>
+        </div>
+
+        <h2>Detalhamento dos Custos</h2>
+        <table class="breakdown-table">
+            <thead>
+                <tr>
+                    <th>Categoria / Item</th>
+                    <th>Estimativa</th>
+                </tr>
+            </thead>
+            <tbody id="resTabelaCorpo">
+                <!-- Preenchido via JavaScript -->
+            </tbody>
+        </table>
+
+        <div class="tips-box">
+            <h4>💡 Dica de Economia do Especialista</h4>
+            <p id="resDica">Para otimizar o seu orçamento, considere ajustar o modelo de decoração ou os opcionais selecionados.</p>
+        </div>
+
+        <button class="btn-whatsapp" onclick="enviarWhatsApp()">📲 Enviar Orçamento por WhatsApp</button>
+        <button class="btn-calculate" style="background-color: var(--text-muted); margin-top: 10px;" onclick="voltarCalculadora()">← Refazer Simulação</button>
+    </div>
+</div>
+
+<script>
+    function updateGuestCount(val) {
+        document.getElementById('guestCountDisplay').innerText = val + (val == 1 ? ' pessoa' : ' pessoas');
+    }
+
+    let ultimoCalculo = {};
+
+    function calcularFesta() {
+        const tipoFesta = document.getElementById('tipoFesta').value;
+        const convidados = parseInt(document.getElementById('numConvidados').value);
+        const padrao = document.querySelector('input[name="padraoFesta"]:checked').value;
+        
+        const servicosElements = document.querySelectorAll('input[name="servicos"]:checked');
+        const servicos = Array.from(servicosElements).map(el => el.value);
+
+        // Fatores de multiplicador base por padrão
+        let fatorPadrao = 1.0;
+        if (padrao === 'Economica') fatorPadrao = 0.75;
+        if (padrao === 'Completa') fatorPadrao = 1.35;
+
+        // Custos base unitários aproximados
+        let custoEspaco = 800 * fatorPadrao;
+        let custoAlimentacao = convidados * 38 * fatorPadrao;
+        let custoBebidas = convidados * 12 * fatorPadrao;
+        let custoBoloDoces = 400 * fatorPadrao;
+        let custoDecoracao = 600 * fatorPadrao;
+        let custoMusicaSom = 450 * fatorPadrao;
+
+        let itensExtrasTotal = 0;
+        let tabelaExtrasHtml = '';
+
+        // Opcionais escolhidos
+        if (servicos.includes('Assador')) {
+            let val = 250 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Assador de Churrasco</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('Garcons')) {
+            let qtdGarcons = Math.ceil(convidados / 25);
+            let val = qtdGarcons * 180 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Garçons (${qtdGarcons} prof.)</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('Fotografia')) {
+            let val = 500 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Fotografia</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('Filmagem')) {
+            let val = 600 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Filmagem</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('DecoraPersonalizada')) {
+            let val = 900 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Decoração Personalizada</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('PegueMonte')) {
+            let val = 300 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Decoração Pegue e Monte</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('Brinquedos')) {
+            let val = 350 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Brinquedos Infantis</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+        if (servicos.includes('Sinuca')) {
+            let val = 200 * fatorPadrao;
+            itensExtrasTotal += val;
+            tabelaExtrasHtml += `<tr><td>Mesa de Sinuca</td><td>R$ ${val.toFixed(2)}</td></tr>`;
+        }
+
+        let totalCalculado = custoEspaco + custoAlimentacao + custoBebidas + custoBoloDoces + custoDecoracao + custoMusicaSom + itensExtrasTotal;
+        let margemMin = totalCalculado * 0.90;
+        let margemMax = totalCalculado * 1.10;
+
+        // Salvar para o WhatsApp
+        ultimoCalculo = {
+            tipo: tipoFesta,
+            convidados: convidados,
+            padrao: padrao,
+            min: margemMin.toFixed(2),
+            max: margemMax.toFixed(2)
+        };
+
+        // Montar Tabela na tela
+        let htmlTabela = `
+            <tr><td>Locação do Espaço / Salão</td><td>R$ ${custoEspaco.toFixed(2)}</td></tr>
+            <tr><td>Alimentação / Buffet</td><td>R$ ${custoAlimentacao.toFixed(2)}</td></tr>
+            <tr><td>Bebidas</td><td>R$ ${custoBebidas.toFixed(2)}</td></tr>
+            <tr><td>Bolo e Doces</td><td>R$ ${custoBoloDoces.toFixed(2)}</td></tr>
+            <tr><td>Decoração Base</td><td>R$ ${custoDecoracao.toFixed(2)}</td></tr>
+            <tr><td>Música / Som</td><td>R$ ${custoMusicaSom.toFixed(2)}</td></tr>
+            ${tabelaExtrasHtml}
+        `;
+
+        document.getElementById('resTabelaCorpo').innerHTML = htmlTabela;
+        document.getElementById('resTotal').innerText = `R$ ${margemMin.toLocaleString('pt-BR', {minimumFractionDigits: 2})} a R$ ${margemMax.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('resSubdetalhes').innerText = `${convidados} convidados • Evento: ${tipoFesta} • Padrão: ${padrao}`;
+
+        // Dica dinâmica
+        let dica = "Ajustar o nível de decoração ou optar por serviços modulados pode gerar uma economia de até 15% no valor total do evento.";
+        if(padrao === 'Completa') {
+            dica = "Em eventos de alto padrão, priorizar uma assessoria completa e um buffet dedicado garante maior fluidez e tranquilidade aos convidados.";
+        } else if(padrao === 'Economica') {
+            dica = "Ótima escolha pelo modelo enxuto! Substituir itens decorativos por soluções estilo 'Pegue e Monte' reduz substancialmente os custos.";
+        }
+        document.getElementById('resDica').innerText = dica;
+
+        // Alternar visualização
+        document.getElementById('form-card').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function voltarCalculadora() {
+        document.getElementById('result-section').style.display = 'none';
+        document.getElementById('form-card').style.display = 'block';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function enviarWhatsApp() {
+        let texto = `Olá! Fiz uma simulação na Calculadora de Festas:\n\n` +
+                    `• Tipo: ${ultimoCalculo.tipo}\n` +
+                    `• Convidados: ${ultimoCalculo.convidados}\n` +
+                    `• Padrão: ${ultimoCalculo.padrao}\n` +
+                    `• Estimativa: R$ ${ultimoCalculo.min} até R$ ${ultimoCalculo.max}\n\n` +
+                    `Gostaria de mais detalhes sobre disponibilidade e agendamento!`;
+        
+        let url = `https://api.whatsapp.com/send?phone=5551999999999&text=${encodeURIComponent(texto)}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
